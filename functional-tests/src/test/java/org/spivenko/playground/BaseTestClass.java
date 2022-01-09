@@ -5,6 +5,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -37,8 +39,15 @@ public class BaseTestClass {
         wireMockServerPort1002.stop();
     }
 
-    void stubForGetRandomNumber(WireMockServer wireMockServer, int statusCode) {
+    void stubForGetRandomNumber(WireMockServer wireMockServer, int statusCode, Duration responseDelay) {
         wireMockServer.stubFor(get(urlEqualTo("/v1/random?min=1&max=6&count=1"))
-                .willReturn(aResponse().withStatus(statusCode)));
+                .willReturn(aResponse().withFixedDelay((int) responseDelay.toMillis())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("{\"result\": 1}")
+                        .withStatus(statusCode)));
+    }
+
+    void stubForGetRandomNumber(WireMockServer wireMockServer, int statusCode) {
+        stubForGetRandomNumber(wireMockServer, statusCode, Duration.ofSeconds(0));
     }
 }

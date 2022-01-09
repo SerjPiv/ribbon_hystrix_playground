@@ -1,6 +1,7 @@
 package org.spivenko.playground.controller;
 
 import lombok.AllArgsConstructor;
+import org.spivenko.playground.integration.model.Result;
 import org.spivenko.playground.service.DiceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class DiceController {
     private final DiceService service;
 
     @GetMapping(path = "/playground/dice/throw")
-    public ResponseEntity<Integer> throwTheDice() {
+    public ResponseEntity<Result> throwTheDice() {
         return ok(service.throwTheDice());
     }
 }
